@@ -9,12 +9,14 @@ BASE_DIR = os.getcwd()
 CONTENT_DIR = os.path.join(BASE_DIR, 'content')
 OUTPUT_DIR = os.path.join(BASE_DIR, 'output')
 THEME_DIR = os.path.join(BASE_DIR, 'theme')
+SITE_TITLE = "Hello World!"
 
 
 env = Environment(loader=FileSystemLoader(THEME_DIR))
 
-with open(os.path.join(THEME_DIR, 'post.html')) as f:
-	POST_TEMPLATE = Template(f.read())
+
+def _generate_context():
+	return {'title': SITE_TITLE}
 
 
 def get_all_posts():
@@ -34,8 +36,10 @@ def generate_html(files):
 
 		new_file_name = os.path.splitext(file)[0] + '.html'
 		template = env.get_template('post.html')
+		context = _generate_context()
+		context.update({'content': content})
 		open(os.path.join(OUTPUT_DIR, new_file_name), 'w').write(
-			template.render(content=content)
+			template.render(context)
 		)
 
 
