@@ -10,3 +10,5 @@ category: Random
 This is my first blog post :)
 
 and this is the second line of it
+
+![](https://media.giphy.com/media/26gN27K98gXfnvEJy/giphy.gif)
