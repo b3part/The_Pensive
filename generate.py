@@ -1,8 +1,10 @@
+import datetime
 import os
 
 from jinja2 import Template, Environment, FileSystemLoader
 
 import misaka
+import yaml
 
 
 BASE_DIR = os.getcwd()
@@ -11,12 +13,20 @@ OUTPUT_DIR = os.path.join(BASE_DIR, 'output')
 THEME_DIR = os.path.join(BASE_DIR, 'theme')
 SITE_TITLE = "Hello World!"
 
+DATE_FORMAT = '%Y-%m-%d'
+
 
 env = Environment(loader=FileSystemLoader(THEME_DIR))
+POST_TEMPLATE = env.get_template('post.html')
 
 
-def _generate_context():
-	return {'title': SITE_TITLE}
+def generate_context(attributes):
+	return {
+		'title': attributes['title'] or SITE_TITLE,
+		'date': datetime.date.strftime(attributes['date'], DATE_FORMAT),
+		'author': attributes['author'] or None,
+		'category': attributes['category'] or None
+	}
 
 
 def get_all_posts():
@@ -29,25 +39,32 @@ def get_all_posts():
 				yield entry.name
 
 
-def generate_html(files):
-	for file in files:
-		with open(os.path.join(CONTENT_DIR, file)) as f:
-			content = misaka.html(f.read())
-
-		new_file_name = os.path.splitext(file)[0] + '.html'
-		template = env.get_template('post.html')
-		context = _generate_context()
-		context.update({'content': content})
+def generate_html(filename, context, post):
+		new_file_name = os.path.splitext(filename)[0] + '.html'
+		context.update({'content': post})
 		open(os.path.join(OUTPUT_DIR, new_file_name), 'w').write(
-			template.render(context)
+			POST_TEMPLATE.render(context)
 		)
+
+
+def parse_post(file):
+	with open(os.path.join(CONTENT_DIR, file)) as f:
+		whole_file = f.read()
+	yaml_header, content = whole_file.split('---', maxsplit=1)
+	attributes = yaml.load(yaml_header)
+	return attributes, content
 
 
 def main():
 	if not os.path.exists(OUTPUT_DIR):
 		os.mkdir(OUTPUT_DIR)
 
-	generate_html(get_all_posts())
+	posts = get_all_posts()
+	for post in posts:
+		attributes, content = parse_post(post)
+		content = misaka.html(content)
+		context = generate_context(attributes)
+		generate_html(post, context, content)
 
 
 if __name__ == '__main__':
