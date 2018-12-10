@@ -87,14 +87,14 @@ def main():
 	if not os.path.exists(OUTPUT_DIR):
 		os.mkdir(OUTPUT_DIR)
 
-	posts = get_all_posts()
+	posts = list(get_all_posts())
 	generate_index(posts)
 	for post in posts:
 		attributes, content = parse_post(post)
 		content = misaka.html(content)
 		context = generate_context(attributes)
 		context.update({'content': content})
-		generate_html(post, context, content)
+		generate_html(post, context)
 
 
 if __name__ == '__main__':
