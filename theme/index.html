@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<h1> Hi There!! </h1>
+
+<h2> Recent Posts </h2>
+
+<ul>
+	{% for post in posts %}
+	<li><a href="{{ post.url }}"> {{ post.title }}</a></li>
+	{% endfor %}
+</ul>
+
+{% endblock %}
