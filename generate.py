@@ -9,7 +9,7 @@ import yaml
 
 BASE_DIR = os.getcwd()
 CONTENT_DIR = os.path.join(BASE_DIR, 'content')
-OUTPUT_DIR = os.path.join(BASE_DIR, 'output')
+OUTPUT_DIR = os.path.join(BASE_DIR, 'docs')
 THEME_DIR = os.path.join(BASE_DIR, 'theme')
 SITE_TITLE = "Hello World!"
 
