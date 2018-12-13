@@ -9,6 +9,6 @@ This blog is to help you revise git concepts :)
 
 Here is a cheetsheet:
 
-![](../content/images/git_cheetsheet.png)
+![](images/git_cheetsheet.png)
 
 Will update it!
